@@ -1,0 +1,109 @@
+.TH USBWS "8" "March 2015" "usbwsd" "System Administration Utilities"
+.SH NAME
+usbwsd \- USB/IP device side WebSocket daemon
+.SH SYNOPSIS
+.B usbwsd
+[\fIoptions\fR]
+
+.SH DESCRIPTION
+.B usbwsd
+runs on divice side computer and provides USB/IP application side computer
+to import USB devices.
+
+Devices have to explicitly be importable from remote computer using
+.B usbip bind
+before usbipd makes them available.
+
+
+.SH OPTIONS
+.HP
+\fB\-d\fR, \fB\-\-debug\fR
+.IP
+Print debugging information.
+.PP
+
+\fB\-tPORT\fR, \fB\-\-tcp\-port PORT\fR
+.IP
+Listen on TCP/IP port PORT. Default is 443 if --ssl option is specified, otherwise 443.
+.PP
+
+\fB\-pPATH\fR, \fB\-\-path PATH\fR
+.IP
+Path in URL served by daemon. Default is 'usbip'.
+.PP
+
+.HP
+\fB\-iINTERVAL\fR, \fB\-\-interval INTERVAL\fR
+.IP
+Noncommunication time period to send ping-pong in seconds.
+Default is 60. 0 denotes not to use ping-pong.
+.PP
+
+\fB\-s\fR, \fB\-\-ssl\fR
+.IP
+Enable SSL.
+.PP
+
+.HP
+\fB\-cCERT-FILE\fR, \fB\-\-cert CERT-FILE\fR
+.IP
+Certificate file for SSL in PEM format. Default is ./cert/server.crt.
+.PP
+
+.HP
+\fB\-kKEY-FILE\fR, \fB\-\-key KEY-FILE\fR
+.IP
+Private key file for SSL in PEM format. Default is ./cert/server.key.
+.PP
+
+.HP
+\fB\-Vverification-mode\fR, \fB\-\-verification verification-mode\fR
+.IP
+Verification mode for SSL from 'none', 'relaxed', 'strict' or 'once'. Default is 'none'.
+.PP
+
+.HP
+\fB\-rROOT-CERT-FILE\fR, \fB\-\-root ROOT-CERT-FILE\fR
+.IP
+Root CA certificate file for SSL in PEM format. Default is none.
+.PP
+
+\fB\-h\fR, \fB\-\-help\fR
+.IP
+Print the program help message and exit.
+.PP
+
+.HP
+\fB\-v\fR, \fB\-\-version\fR
+.IP
+Show version.
+.PP
+
+
+.SH EXAMPLES
+
+    dev: - at device side computer.
+    app: - at application side computer.
+
+    dev:# usbwsd
+        - Start daemon.
+    dev:# usbws list
+        - List local USB devices.
+    dev:# usbws bind --busid 1-2
+        - Make a USB device importable from a remote computer.
+    app:# usbws list --url ws://172.1.2.3/usbip
+        - List importable USB devices from the computer.
+    app:# usbws attach --url ws://172.1.2.3/usbip --busid 1-2
+        - Import the remote USB device.
+    app:# usbws port
+        - List imported USB devices.
+    app:# usbws detach --port 0
+        - Detach a USB device.
+    dev:# usbws unbind --busid 1-2
+        - Make the USB device not importable, then release to local.
+
+
+.SH "SEE ALSO"
+\fBusbws\fP\fB(8)\fB\fP
+\fBusbwsa\fP\fB(8)\fB\fP
+

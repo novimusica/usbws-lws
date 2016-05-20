@@ -1,0 +1,101 @@
+.TH USBWS "8" "March 2015" "usbwsa" "System Administration Utilities"
+.SH NAME
+usbwsa \- USB/IP application side WebSocket daemon
+.SH SYNOPSIS
+.B usbwsa
+[\fIoptions\fR]
+
+.SH DESCRIPTION
+.B usbwsa
+runs on application side computer and services exported USB devices from
+device side computer.
+
+Devices are exported using
+.B usbws connect
+at device side computer.
+
+
+.SH OPTIONS
+.HP
+\fB\-d\fR, \fB\-\-debug\fR
+.IP
+Print debugging information.
+.PP
+
+\fB\-tPORT\fR, \fB\-\-tcp\-port PORT\fR
+.IP
+Listen on TCP/IP port PORT. Default is 443 if --ssl option is specified, otherwise 443.
+.PP
+
+\fB\-pPATH\fR, \fB\-\-path PATH\fR
+.IP
+Path in URL served by daemon. Default is 'usbip'.
+.PP
+
+.HP
+\fB\-iINTERVAL\fR, \fB\-\-interval INTERVAL\fR
+.IP
+Noncommunication time period to send ping-pong in seconds.
+Default is 60. 0 denotes not to use ping-pong.
+.PP
+
+\fB\-s\fR, \fB\-\-ssl\fR
+.IP
+Enable SSL.
+.PP
+
+.HP
+\fB\-cCERT-FILE\fR, \fB\-\-cert CERT-FILE\fR
+.IP
+Certificate file for SSL in PEM format. Default is ./cert/server.crt.
+.PP
+
+.HP
+\fB\-kKEY-FILE\fR, \fB\-\-key KEY-FILE\fR
+.IP
+Private key file for SSL in PEM format. Default is ./cert/server.key.
+.PP
+
+.HP
+\fB\-Vverification-mode\fR, \fB\-\-verification verification-mode\fR
+.IP
+Verification mode for SSL from 'none', 'relaxed', 'strict' or 'once'. Default is 'none'.
+.PP
+
+.HP
+\fB\-rROOT-CERT-FILE\fR, \fB\-\-root ROOT-CERT-FILE\fR
+.IP
+Root CA certificate file for SSL in PEM format. Default is none.
+.PP
+
+\fB\-h\fR, \fB\-\-help\fR
+.IP
+Print the program help message and exit.
+.PP
+
+.HP
+\fB\-v\fR, \fB\-\-version\fR
+.IP
+Show version.
+.PP
+
+
+.SH EXAMPLES
+
+    app: - at application side computer.
+    dev: - at device side computer.
+
+    app:# usbwsa
+        - Start daemon.
+    dev:# usbws list
+        - List local USB devices.
+    dev:# usbws connect --url ws://172.4.5.6 --busid 1-2
+        - Export a USB device to a remote computer.
+    dev:# usbws disconnect --url ws://172.4.5.6 --busid 1-2
+        - Unxport the USB device from a remote computer.
+
+
+.SH "SEE ALSO"
+\fBusbws\fP\fB(8)\fB\fP
+\fBusbwsd\fP\fB(8)\fB\fP
+

@@ -1,0 +1,184 @@
+#
+# README for usbip-utils WebSocket extension sample.
+#
+# Copyright (C) 2015 Nobuo Iwata
+#
+
+1) Goal of this sample
+
+    To give a sample application of userspace transmission of USB/IP and it's
+    utilities.
+
+2) Requirement
+
+2-1) POCO C++ implementation
+
+    Install C++ package.
+
+    > sudo yum install gcc-c++
+
+    Install openssl-devel or openssl-dev package.
+
+    > sodo yum install openssl-devel
+
+    Get complete edition source code from http://pocoproject.org/.
+
+    > ./configure --omit=Data/ODBC,Data/MySQL
+
+    > make
+
+    > sudo make install
+
+3) Make
+
+3-1) POCO C++ implementation
+
+    Compile drivers.
+
+    > cd usbip
+    > make
+
+    Compile libraries.
+
+    > cd tools/usb/usbip
+    > make
+
+    Compile WebSocket utilities.
+
+    > cd tools/usb/usbip/websocket
+    > make
+
+4) Usage of WebSocket utilities
+
+    usbwsa [options] - daemon for application side
+
+    usbwsd [options] - daemon for device side
+
+    -d, --debug
+        Enable debug messages.
+    -t, --tcp=PORT-NUMBER
+        Serving TCP port number. Default is 80 or 443 for non-SSL and SSL
+        respectively.
+    -p, --path=PATH
+        Serving path portion of URL. Default is /usbip.
+    -i, --interval=INTERVAL
+        Noncommunication time period to send ping-pong in seconds.
+        Default is 60. 0 denotes not to use ping-pong.
+    -s, -ssl
+        SSL mode, ie. wss.
+    -k, --key=KEY-FILE
+        Private key file. Default is cert/server.key.
+    -c, --cert=CERT-FILE
+        Certificate file. Default is cert/server.crt.
+    -r, --root-cert=ROOT-CERT-FILE
+        Certificate file of root CA. Not used as default.
+    -V, --verification=VERIFICATION-MODE
+        none(default), relaxed, strict or once.
+    -h, --help
+        Print help.
+    -v, --version
+        Show version.
+
+    usbws <command> [options] - command for both device and application side
+
+    command
+        connect - export a device to remote. (at device side)
+        disconnect - unexport a device from remote. (at device side)
+
+        list - list local devices. (at device side)
+               list importable devices. (at application side)
+        port - list imported devices. (at application side)
+
+        bind - make a device importable. (at device side)
+        attach - import a device. (at application side)
+        detach - cancel import. (at application side)
+        unbind - make a device not importable. (at device side)
+
+    -d, --debug
+        Enable debug messages.
+    -u, --url=URL
+        URL of WebSocket server. ex) ws://<host>/usbip or wss://<host>/usbip
+        Default port number is 80 or 443 for ws and wsss respectively.
+    -p, --proxy=URL
+        URL of http proxy server. ex) http://<proxy-addr>:8080
+        No proxy is used as default.
+        Proxy user and password can be specified in URL.
+        ex) http://<user>:<pwd>@<proxy-host>:8080
+    -b, --busid=BUS-ID
+        Bus ID of a device to export or unexport.
+    -o, --timeout
+        Connect timeout in seconds. Default is 5.
+    -i, --interval=INTERVAL
+        Noncommunication time period to send ping-pong in seconds.
+        Default is 60. 0 denotes not to use ping-pong.
+    -k, --key=KEY-FILE
+        Private key file. Default is cert/server.key.
+    -c, --cert=CERT-FILE
+        Certificate file. Default is cert/server.crt.
+    -r, --root-cert=ROOT-CERT-FILE
+        Certificate file of root CA. Not used as default.
+    -V, --verification=VERIFICATION-MODE
+        none(default), relaxed.
+
+5) Execution
+
+5-1) POCO C++ implementation
+
+    Insert drivers.
+
+    a) Application side computer
+        # cd usbip
+        # insmod usbip-core.ko
+        # insmod usbip-ux.ko
+        # insmod vhci-hcd.ko
+
+    b) Device side computer
+        # cd usbip
+        # insmod usbip-core.ko
+        # insmod usbip-ux.ko
+        # insmod usbip-host.ko
+
+    Execute utilities.
+
+    a) Application side computer
+        # cd usbip/userspace
+        # websocket/src/usbwsa --tcp-port 3240 --ssl
+
+    b) Device side computer
+        --- START ---
+        # cd usbip/userspace
+        # websocket/src/usbws connect \
+        --url wss://111.222.333.444:3240/usbip -b 1-2
+        NOTE: it will running while normal operation.
+
+        --- END ... in another window ---
+        # cd usbip/userspace
+        # websocket/src/usbws disconnect \
+        --url wss://111.222.333.444:3240/usbip -b 1-2
+
+Usage via HTTP proxy
+
+    Example below shows usage pass through squid proxy.
+
+    a) Summary of /etc/squid/squid.conf
+        acl SSL_ports port 443
+        acl CONNECT method CONNECT
+        http_access deny CONNECT !SSL_ports
+        http_port 3128
+
+    b) Application side
+        # cd usbip/userspace
+        # websocket/src/usbwsa --ssl
+
+    c) Device side
+        --- START ---
+        # cd usbip/userspace
+        # websocket/src/usbws connect -proxy http://proxy.example.com:3128 \
+        --url wss://111.222.333.444/usbip -b 1-2
+        NOTE: it will running while normal operation.
+
+        --- END ... in another window ---
+        # cd usbip/userspace
+        # websocket/src/usbws disconnect -proxy http://proxy.example.com:3128 \
+        --url wss://111.222.333.444/usbip -b 1-2
+

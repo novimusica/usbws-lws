@@ -1,0 +1,192 @@
+.TH USBWS "8" "March 2015" "usbws" "System Administration Utilities"
+.SH NAME
+usbws \- manage USB/IP devices via WebSocket
+.SH SYNOPSIS
+.B usbws
+<\fIcommand\fR> [\fIoptions\fR]
+
+.SH DESCRIPTION
+On a USB/IP device side computer,
+lists local devices, makes a device importable, makes not importable,
+export and unexport.
+On a USB/IP application side computer,
+lists importable devices from device side, import device and unimport device.
+Connect and attach command will not return
+and they transmit USB packets between a daemon
+until disconnect or detach command is executed respectively.
+
+.SH COMMANDS
+.HP
+\fBversion\fR
+.IP
+Show version and exit.
+.PP
+
+.HP
+\fBhelp\fR
+.IP
+Print the program help message, or help on a specific command, and
+then exit.
+.PP
+
+.HP
+\fBattach\fR \-\-url <\fIurl\fR> \-\-busid <\fIbus_id\fR> [\fIoptions\fR]
+.IP
+Attach a importable USB device from remote computer.
+.PP
+
+.HP
+\fBdetach\fR \-\-port <\fIport\fR> [\fIoptions\fR]
+.IP
+Detach an imported USB device.
+.PP
+
+.HP
+\fBbind\fR \-\-busid <\fIbusid\fR> [\fIoptions\fR]
+.IP
+Make a USB device importable from remote computer.
+.PP
+
+.HP
+\fBunbind\fR \-\-busid <\fIbusid\fR> [\fIoptions\fR]
+.IP
+Make a USB device not importable so it can be used by a local driver.
+.PP
+
+.HP
+\fBlist\fR \-\-url <\fIurl\fR> [\fIoptions\fR]
+.IP
+List importable USB devices from a remote computer.
+.PP
+
+.HP
+\fBlist\fR \-\-local [\fIoptions\fR]
+.IP
+List local USB devices.
+.PP
+
+.HP
+\fBport\fR
+.IP
+List imported USB devices.
+.PP
+
+
+.SH OPTIONS
+.HP
+\fB\-d\fR, \fB\-\-debug\fR
+.IP
+Print debugging information.
+.PP
+
+.HP
+\fB\-uURL\fR, \fB\-\-url URL\fR
+.IP
+URL served by remote usbip daemon. Scheme must be \fBws\fR or \fBwss\fR.
+.PP
+
+.HP
+\fB\-xURL\fR, \fB\-\-proxy URL\fR
+.IP
+URL of HTTP proxy server.
+.PP
+
+.HP
+\fB\-bBUS-ID\fR, \fB\-\-busid BUS-ID\fR
+.IP
+Bus ID of a USB device.
+.PP
+
+.HP
+\fB\-oCONN-TOUT\fR, \fB\-\-timeout CONN-TIMEOUT\fR
+.IP
+Connect timeout in seconds. Default is 5.
+.PP
+
+.HP
+\fB\-iINTERVAL\fR, \fB\-\-interval INTERVAL\fR
+.IP
+Noncommunication time period to send ping-pong in seconds.
+Default is 60. 0 denotes not to use ping-pong.
+.PP
+
+.HP
+\fB\-tPORT\fR, \fB\-\-port PORT\fR
+.IP
+Port number to detach.
+.PP
+
+.HP
+\fB\-l\fR, \fB\-\-local\fR
+.IP
+List local devices.
+.PP
+
+.HP
+\fB\-P\fR, \fB\-\-parsable\fR
+.IP
+Use parsable list format.
+.PP
+
+.HP
+\fB\-cCERT-FILE\fR, \fB\-\-cert CERT-FILE\fR
+.IP
+Certificate file for SSL in PEM format. Default is ./cert/clinet.crt.
+.PP
+
+.HP
+\fB\-kKEY-FILE\fR, \fB\-\-key KEY-FILE\fR
+.IP
+Private key file for SSL in PEM format. Default is ./cert/clinet.key.
+.PP
+
+.HP
+\fB\-Vverification-mode\fR, \fB\-\-verification verification-mode\fR
+.IP
+Verification mode for SSL from 'none' or 'relaxed'. Default is 'none'.
+.PP
+
+.HP
+\fB\-rROOT-CERT-FILE\fR, \fB\-\-root ROOT-CERT-FILE\fR
+.IP
+Root CA certificate file for SSL in PEM format. Default is none.
+.PP
+
+
+.SH EXAMPLES
+
+    dev: - at device side computer.
+    app: - at application side computer.
+
+Import from application side computer.
+    dev:# usbwsd
+        - Start daemon.
+    dev:# usbws list
+        - List local USB devices.
+    dev:# usbws bind --busid 1-2
+        - Make a USB device importable from a remote computer.
+    app:# usbws list --url ws://172.1.2.3/usbip
+        - List importable USB devices from the computer.
+    app:# usbws attach --url ws://172.1.2.3/usbip --busid 1-2
+        - Import the remote USB device.
+    app:# usbws port
+        - List imported USB devices.
+    app:# usbws detach --port 0
+        - Detach a USB device.
+    dev:# usbws unbind --busid 1-2
+        - Make the USB device not importable, then release to local.
+
+Export from device side computer.
+    app:# usbwsa
+        - Start daemon.
+    dev:# usbws list
+        - List local USB devices.
+    dev:# usbws connect --url ws://172.4.5.6 --busid 1-2
+        - Export a USB device to a remote computer.
+    dev:# usbws disconnect --url ws://172.4.5.6 --busid 1-2
+        - Unxport the USB device from a remote computer.
+
+
+.SH "SEE ALSO"
+\fBusbwsd\fP\fB(8)\fB\fP
+\fBusbwsa\fP\fB(8)\fB\fP
