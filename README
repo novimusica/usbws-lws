@@ -1,54 +1,47 @@
 #
 # README for usbip-utils WebSocket extension sample.
 #
-# Copyright (C) 2015 Nobuo Iwata
+# Copyright (C) 2015-2016 Nobuo Iwata
 #
 
 1) Goal of this sample
 
-    To give a sample application of userspace transmission of USB/IP and it's
-    utilities.
+    To give a sample application for USB/IP API.
 
-2) Requirement
-
-2-1) POCO C++ implementation
-
-    Install C++ package.
-
-    > sudo yum install gcc-c++
+2) Build libwebsockets
 
     Install openssl-devel or openssl-dev package.
 
     > sodo yum install openssl-devel
 
-    Get complete edition source code from http://pocoproject.org/.
+    Get source code from https://libwebsockets.org/.
 
-    > ./configure --omit=Data/ODBC,Data/MySQL
-
+    > cd <libwebsockets-src>
+    > mkdir build
+    > cd build
+    > cmake ..
     > make
-
     > sudo make install
 
-3) Make
+3) Build USB/IP library
 
-3-1) POCO C++ implementation
-
-    Compile drivers.
-
-    > cd usbip
+    > cd <kernel-src>/tools/usb/usbip
+    > ./autogen.sh
+    > ./configure
     > make
+    > sudo make install
 
-    Compile libraries.
+    libusbip.so, libusbipc.so, libusbipa.so and libusbipd.so are created in
+    /usr/local/lib.
 
-    > cd tools/usb/usbip
+4) Build USB over WebSocket utilities
+
+    > ./autogen.sh
+    > ./configure
     > make
+    > sudo make install
 
-    Compile WebSocket utilities.
-
-    > cd tools/usb/usbip/websocket
-    > make
-
-4) Usage of WebSocket utilities
+5) Usage of USB over WebSocket utilities
 
     usbwsa [options] - daemon for application side
 
@@ -120,9 +113,7 @@
     -V, --verification=VERIFICATION-MODE
         none(default), relaxed.
 
-5) Execution
-
-5-1) POCO C++ implementation
+6) Example
 
     Insert drivers.
 

@@ -16,7 +16,7 @@
  */
 
 #include <libwebsockets.h>
-#include <usbip_api.h>
+#include <linux/usbip_api.h>
 #include "usbws_client.h"
 
 const char *usbws_default_key = "cert/server.key";

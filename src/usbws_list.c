@@ -18,7 +18,7 @@
 #include <libwebsockets.h>
 #include <getopt.h>
 #include <stdio.h>
-#include <usbip_api.h>
+#include <linux/usbip_api.h>
 #include "usbws.h"
 #include "usbws_client.h"
 
@@ -179,7 +179,7 @@ int usbws_list(int argc, char *argv[], enum usbws_command cmd UNUSED)
 		usbip_set_debug_flags(opt_flags);
 #endif
 	if (opt_local) {
-		if (usbip_list_devices(opt_parsable))
+		if (usbip_list_local_devices(opt_parsable))
 			goto err_out;
 #ifndef USBIP_WITH_LIBUSB
 	} else {

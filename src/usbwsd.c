@@ -18,7 +18,7 @@
 #include <libwebsockets.h>
 #include <getopt.h>
 #include <stdio.h>
-#include <usbip_api.h>
+#include <linux/usbip_api.h>
 #include "usbws_ctx.h"
 #include "usbws_session.h"
 #include "usbws_util.h"
@@ -326,7 +326,7 @@ int main(int argc, char *argv[])
 		if (usbws_create_pid_file())
 			goto err_out;
 	}
-	if (usbip_driver_open()) {
+	if (usbip_open_driver()) {
 		lwsl_err("failed to open driver\n");
 		goto err_rm_pid_file;
 	}
@@ -334,7 +334,7 @@ int main(int argc, char *argv[])
 	if (opt_daemonize) {
 		if (daemon(0, 0) < 0) {
 			lwsl_err("failed to daemonizing\n");
-			goto err_driver_close;
+			goto err_close_driver;
 		}
 		umask(0);
 		usbip_set_use_syslog(1);
@@ -343,14 +343,14 @@ int main(int argc, char *argv[])
 
 	usbws_service();
 
-	usbip_driver_close();
+	usbip_close_driver();
 
 	if (opt_pid_file)
 		usbws_remove_pid_file();
 
 	return 0;
-err_driver_close:
-	usbip_driver_close();
+err_close_driver:
+	usbip_close_driver();
 err_rm_pid_file:
 	if (opt_pid_file)
 		usbws_remove_pid_file();
