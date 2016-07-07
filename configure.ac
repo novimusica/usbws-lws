@@ -30,6 +30,12 @@ AC_TYPE_SSIZE_T
 # Checks for library functions.
 AC_CHECK_FUNCS([fcntl.h unistd.h])
 
+AC_ARG_WITH([libusb],
+	    [  --with-libusb           with libusb @<:@default=no@:>@],
+	    [with_libusb=true],
+	    [with_libusb=false])
+AM_CONDITIONAL([WITH_LIBUSB], [test x$with_libusb = xtrue])
+
 AC_CHECK_HEADER(libwebsockets.h,,
 	AC_MSG_ERROR([Missing libwebsockets.h]))
 AC_CHECK_HEADER(lws_config.h,,
