@@ -34,10 +34,20 @@
     libusbip.so, libusbipc.so, libusbipa.so and libusbipd.so are created in
     /usr/local/lib.
 
+    To build with libusb - device side only,
+    > cd <kernel-src>/tools/usb/usbip/libusb
+    > ./autogen.sh
+    > ./configure [--with-dummy-driver]
+    > make
+    > sudo make install
+
+    libusbip_libusb.so, libusbip_stub.so, libusbipc_libusb.so and
+    libusbipd_libusb.so are created in /usr/local/lib.
+
 4) Build USB over WebSocket utilities
 
     > ./autogen.sh
-    > ./configure
+    > ./configure [--with-libusb]
     > make
     > sudo make install
 
