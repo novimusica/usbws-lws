@@ -29,7 +29,7 @@ DST_USBWSD=$DST_SOL/usbwsd
 FILES_LIB="\
 	$TOP/src/usbip_network.[ch] \
 	$TOP/libsrc/usbip_common.[ch] \
-	$TOP/libsrc/usbip_host_api.c \
+	$TOP/libsrc/usbip_host_nppi.c \
 	$TOP/libsrc/usbip_config.h \
 	$TOP/libsrc/usbip_host_common.h \
 	$TOP/libsrc/usbip_host_driver.h \
@@ -52,7 +52,7 @@ FILES_WIN="\
 	$TOP/libusb/os/win32/usbip_os.h \
 	$TOP/libusb/os/win32/usbip_sock.h"
 FILES_LINUX="\
-	$INC/uapi/linux/usbip_api.h"
+	$INC/uapi/linux/usbip_nppi.h"
 FILE_CFG=$TOP/libusb/os/win32/config.h
 FILE_IDS=$HWDATA/usb.ids
 FILES_USBWS="\
