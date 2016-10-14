@@ -13,7 +13,7 @@ $(SolutionDir)
 |
 +-lib
 |   Type:    lib
-|   Sources: usbip_network.c usbip_common.c usbip_host_nppi.c names.c
+|   Sources: usbip_network.c usbip_common.c usbip_host_api.c names.c
 |            stub_*.c # from libusb/stub
 |            dummy_device_driver.c # from libusb/libsrc
 |   Headers: usbip_network.h usbip_common.h usbip_config.h
@@ -47,7 +47,7 @@ $(SolutionDir)
 |   Headers: usbip_os.h usbip_sock.h # from libusb/os/win32
 |
 +linux
-|   Headers: usbip_nppi.h # from include/uapi/linux
+|   Headers: usbip_api.h # from include/uapi/linux
 |
 +-config.h
 |   Copied from libusb/os/win32

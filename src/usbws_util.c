@@ -16,7 +16,7 @@
  */
 
 #include <libwebsockets.h>
-#include <linux/usbip_nppi.h>
+#include <linux/usbip_api.h>
 #include <stdio.h>
 #include "usbws_util.h"
 

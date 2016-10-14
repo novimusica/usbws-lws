@@ -17,7 +17,7 @@
 
 #include <getopt.h>
 #include <stdio.h>
-#include <linux/usbip_nppi.h>
+#include <linux/usbip_api.h>
 #include "usbws.h"
 #include "usbws_util.h"
 
