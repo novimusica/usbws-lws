@@ -202,7 +202,7 @@ static void *usbws_service_session(void *arg)
 	usbws_sock_init(&sock, wsi);
 
 	lwsl_debug("servicing session %p %s:%s\n", wsi, host, port);
-	if (usbip_recv_pdu(&sock, host, port))
+	if (usbipd_recv_pdu(&sock, host, port))
 		lwsl_err("failed to recv pdu\n");
 	lwsl_debug("end of service session %p %s:%s\n", wsi, host, port);
 
@@ -326,7 +326,7 @@ int main(int argc, char *argv[])
 		if (usbws_create_pid_file())
 			goto err_out;
 	}
-	if (usbip_open_driver()) {
+	if (usbipd_driver_open()) {
 		lwsl_err("failed to open driver\n");
 		goto err_rm_pid_file;
 	}
@@ -334,7 +334,7 @@ int main(int argc, char *argv[])
 	if (opt_daemonize) {
 		if (daemon(0, 0) < 0) {
 			lwsl_err("failed to daemonizing\n");
-			goto err_close_driver;
+			goto err_driver_close;
 		}
 		umask(0);
 		usbip_set_use_syslog(1);
@@ -343,14 +343,14 @@ int main(int argc, char *argv[])
 
 	usbws_service();
 
-	usbip_close_driver();
+	usbipd_driver_close();
 
 	if (opt_pid_file)
 		usbws_remove_pid_file();
 
 	return 0;
-err_close_driver:
-	usbip_close_driver();
+err_driver_close:
+	usbipd_driver_close();
 err_rm_pid_file:
 	if (opt_pid_file)
 		usbws_remove_pid_file();
